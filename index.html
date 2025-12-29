@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Randevu Sistemi</title>
+ <link rel="stylesheet" href="still1.css">
+</head>
+
+<body>
+
+<h2>Randevu Sistemi</h2>
+
+<div class="container">
+
+<div class="box">
+<form id="form">
+
+<label>Ad</label>
+<input id="ad" required>
+
+<label>Soyad</label>
+<input id="soyad" required>
+
+<label>Kuaför</label>
+<select id="kuafor" required>
+  <option value="">Seçiniz</option>
+  <option>Orkide</option>
+  <option>Burak İpek</option>
+  <option>Gençlik</option>
+</select>
+
+<label>Personel</label>
+<select id="personel" required></select>
+
+<label>Tarih</label>
+<input type="date" id="tarih" required>
+
+<label>Saat</label>
+<select id="saat" required>
+  <option value="">Saat seç</option>
+</select>
+
+<button>Randevu Al</button>
+</form>
+</div>
+
+<div class="box" style="flex:1">
+<div id="liste"></div>
+</div>
+
+</div>
+
+<script>
+
+const personeller = {
+  "Orkide": ["Ercan","Metin"],
+  "Burak İpek": ["Burak"],
+  "Gençlik": ["Hakan","Tevfik"]
+};
+
+const kuafor = document.getElementById("kuafor");
+const personel = document.getElementById("personel");
+const tarih = document.getElementById("tarih");
+const saat = document.getElementById("saat");
+const liste = document.getElementById("liste");
+
+const bugun = new Date().toISOString().split("T")[0];
+tarih.min = bugun;
+
+let randevular = JSON.parse(localStorage.getItem("randevular")) || [];
+
+kuafor.onchange = () => {
+  personel.innerHTML = "";
+  personeller[kuafor.value]?.forEach(p =>
+    personel.innerHTML += `<option>${p}</option>`
+  );
+  saatDoldur();
+};
+
+function saatDoldur(){
+  saat.innerHTML = `<option value="">Saat seç</option>`;
+
+  const simdi = new Date();
+  const simdiDakika = simdi.getHours() * 60 + simdi.getMinutes();
+
+  for(let h=9,m=0; h<18; m+=15){
+    if(m==60){ m=0; h++; }
+
+    let zaman = `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}`;
+    let dakika = h * 60 + m;
+
+    if(tarih.value === bugun && dakika <= simdiDakika) continue;
+
+    let dolu = randevular.some(r =>
+      r.kuafor == kuafor.value &&
+      r.personel == personel.value &&
+      r.tarih == tarih.value &&
+      r.saat == zaman
+    );
+
+    if(!dolu)
+      saat.innerHTML += `<option>${zaman}</option>`;
+  }
+}
+
+tarih.onchange = personel.onchange = saatDoldur;
+
+function listeyiGuncelle(){
+  liste.innerHTML = "";
+  randevular.forEach((r,i) => {
+    liste.innerHTML += `
+    <div class="card">
+      <b>${r.ad} ${r.soyad}</b>
+      Kuaför: ${r.kuafor}<br>
+      Personel: ${r.personel}<br>
+      Tarih: ${r.tarih}<br>
+      Saat: ${r.saat}
+      <button class="sil" onclick="sil(${i})">Randevuyu Sil</button>
+    </div>`;
+  });
+}
+
+function sil(i){
+  randevular.splice(i,1);
+  localStorage.setItem("randevular", JSON.stringify(randevular));
+  listeyiGuncelle();
+  saatDoldur();
+}
+
+form.onsubmit = e => {
+  e.preventDefault();
+
+  randevular.push({
+    ad: ad.value,
+    soyad: soyad.value,
+    kuafor: kuafor.value,
+    personel: personel.value,
+    tarih: tarih.value,
+    saat: saat.value
+  });
+
+  localStorage.setItem("randevular", JSON.stringify(randevular));
+  listeyiGuncelle();
+  saatDoldur();
+  e.target.reset();
+};
+
+listeyiGuncelle();
+</script>
+
+</body>
+</html>
