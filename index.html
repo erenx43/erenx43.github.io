@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YemekSepeti • Sipariş Ver, Takip Et</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@700&display=swap');
+        .logo-font { font-family: 'Playfair Display', sans-serif; }
+        .hero-bg { background: linear-gradient(135deg, #e63939 0%, #f97316 100%); }
+        .card-hover:hover { transform: translateY(-8px); box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.15); }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+<nav class="bg-white border-b shadow-sm sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-red-600 rounded-2xl flex items-center justify-center text-white text-3xl">🍔</div>
+            <h1 class="logo-font text-4xl font-bold text-red-600">YemekSepeti</h1>
+        </div>
+        <div id="nav-right"></div>
+    </div>
+</nav>
+
+<div class="max-w-7xl mx-auto px-6 py-8">
+
+    <!-- HOME -->
+    <div id="page-home" class="page">
+        <div class="hero-bg text-white rounded-3xl p-16 text-center">
+            <h2 class="text-6xl font-bold mb-6">Aç mısın? Hemen sipariş ver!</h2>
+            <div class="flex flex-wrap justify-center gap-4 mt-10">
+                <button onclick="showPage('page-customer-login')" class="bg-white text-red-600 px-10 py-5 rounded-3xl font-semibold">Müşteri Girişi</button>
+                <button onclick="showPage('page-customer-register')" class="bg-white/20 border border-white px-10 py-5 rounded-3xl font-semibold">Müşteri Kayıt</button>
+                <button onclick="showPage('page-restaurant-login')" class="bg-white/20 border border-white px-10 py-5 rounded-3xl font-semibold">Restoran Girişi</button>
+                <button onclick="showPage('page-restaurant-register')" class="bg-white/20 border border-white px-10 py-5 rounded-3xl font-semibold">Restoran Kayıt</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MÜŞTERİ GİRİŞ -->
+    <div id="page-customer-login" class="page hidden max-w-md mx-auto bg-white rounded-3xl shadow-xl p-10 relative">
+        <button onclick="showPage('page-home')" class="absolute top-6 left-6 text-gray-500 hover:text-red-600 flex items-center gap-2">
+            <i class="fa-solid fa-arrow-left"></i> Geri
+        </button>
+        <h2 class="text-3xl font-bold text-center mb-8">Müşteri Girişi</h2>
+        <form onsubmit="customerLogin(event)">
+            <input id="cust-login-input" type="text" placeholder="Kullanıcı adı veya E-posta" required class="w-full px-5 py-4 rounded-2xl border mb-4">
+            <input id="cust-login-password" type="password" placeholder="Şifre" required class="w-full px-5 py-4 rounded-2xl border mb-6">
+            <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white py-5 rounded-3xl font-semibold text-lg">Giriş Yap</button>
+        </form>
+        <p onclick="showPage('page-customer-register')" class="text-center text-red-600 mt-6 cursor-pointer">Hesabın yok mu? Kayıt ol</p>
+    </div>
+
+    <!-- MÜŞTERİ KAYIT -->
+    <div id="page-customer-register" class="page hidden max-w-md mx-auto bg-white rounded-3xl shadow-xl p-10 relative">
+        <button onclick="showPage('page-home')" class="absolute top-6 left-6 text-gray-500 hover:text-red-600 flex items-center gap-2">
+            <i class="fa-solid fa-arrow-left"></i> Geri
+        </button>
+        <h2 class="text-3xl font-bold text-center mb-8">Müşteri Kayıt Ol</h2>
+        <form onsubmit="customerRegister(event)">
+            <input id="cust-reg-username" type="text" placeholder="Kullanıcı Adı" required class="w-full px-5 py-4 rounded-2xl border mb-4">
+            <input id="cust-reg-email" type="email" placeholder="Gmail Adresi" required class="w-full px-5 py-4 rounded-2xl border mb-4">
+            <input id="cust-reg-address" type="text" placeholder="Ev Adresi" required class="w-full px-5 py-4 rounded-2xl border mb-4">
+            <input id="cust-reg-phone" type="tel" placeholder="Telefon" required class="w-full px-5 py-4 rounded-2xl border mb-4">
+            <input id="cust-reg-password" type="password" placeholder="Şifre" required class="w-full px-5 py-4 rounded-2xl border mb-6">
+            <button type="submit" class="w-full bg-red-600 text-white py-5 rounded-3xl font-semibold">Kayıt Ol</button>
+        </form>
+    </div>
+
+    <!-- RESTORAN GİRİŞ -->
+    <div id="page-restaurant-login" class="page hidden max-w-md mx-auto bg-white rounded-3xl shadow-xl p-10 relative">
+        <button onclick="showPage('page-home')" class="absolute top-6 left-6 text-gray-500 hover:text-red-600 flex items-center gap-2">
+            <i class="fa-solid fa-arrow-left"></i> Geri
+        </button>
+        <h2 class="text-3xl font-bold text-center mb-8">Restoran Girişi</h2>
+        <form onsubmit="restaurantLogin(event)">
+            <input id="rest-login-input" type="text" placeholder="Restoran Adı veya E-posta" required class="w-full px-5 py-4 rounded-2xl border mb-4">
+            <input id="rest-login-password" type="password" placeholder="Şifre" required class="w-full px-5 py-4 rounded-2xl border mb-6">
+            <button type="submit" class="w-full bg-red-600 text-white py-5 rounded-3xl font-semibold text-lg">Giriş Yap</button>
+        </form>
+        <p onclick="showPage('page-restaurant-register')" class="text-center text-red-600 mt-6 cursor-pointer">Hesabın yok mu? Kayıt ol</p>
+    </div>
+
+    <!-- RESTORAN KAYIT -->
+    <div id="page-restaurant-register" class="page hidden max-w-md mx-auto bg-white rounded-3xl shadow-xl p-10 relative">
+        <button onclick="showPage('page-home')" class="absolute top-6 left-6 text-gray-500 hover:text-red-600 flex items-center gap-2">
+            <i class="fa-solid fa-arrow-left"></i> Geri
+        </button>
+        <h2 class="text-3xl font-bold text-center mb-8">Restoran Kayıt Ol</h2>
+        <form onsubmit="restaurantRegister(event)">
+            <input id="rest-reg-name" type="text" placeholder="Restoran Adı" required class="w-full px-5 py-4 rounded-2xl border mb-4">
+            <input id="rest-reg-owner" type="text" placeholder="Sahibi Ad Soyad" required class="w-full px-5 py-4 rounded-2xl border mb-4">
+            <input id="rest-reg-owner-email" type="email" placeholder="Sahibi E-posta" required class="w-full px-5 py-4 rounded-2xl border mb-4">
+            <input id="rest-reg-owner-phone" type="tel" placeholder="Sahibi Telefon" required class="w-full px-5 py-4 rounded-2xl border mb-4">
+            <input id="rest-reg-password" type="password" placeholder="Şifre" required class="w-full px-5 py-4 rounded-2xl border mb-6">
+            <button type="submit" class="w-full bg-red-600 text-white py-5 rounded-3xl font-semibold">Restoranı Kaydet</button>
+        </form>
+    </div>
+
+    <!-- MÜŞTERİ DASHBOARD -->
+    <div id="customer-dashboard" class="page hidden relative">
+        <button onclick="logout()" class="absolute top-6 left-6 text-gray-500 hover:text-red-600 flex items-center gap-2">
+            <i class="fa-solid fa-arrow-left"></i> Geri
+        </button>
+        <div class="flex justify-between items-center mb-8 pt-10">
+            <h2 id="customer-welcome" class="text-4xl font-bold"></h2>
+            <div onclick="showCart()" class="relative cursor-pointer bg-white px-6 py-3 rounded-3xl shadow flex items-center gap-3">
+                <i class="fa-solid fa-shopping-cart text-2xl"></i>
+                <span class="font-semibold">Sepetim</span>
+                <span id="cart-count" class="absolute -top-2 -right-2 bg-red-600 text-white text-xs w-6 h-6 flex items-center justify-center rounded-full font-bold">0</span>
+            </div>
+        </div>
+
+        <div class="flex gap-3 overflow-x-auto pb-6 mb-8">
+            <button onclick="filterByCategory('all')" class="category-btn active px-6 py-3 bg-red-600 text-white rounded-3xl">Tümü</button>
+            <button onclick="filterByCategory('Dürüm')" class="category-btn px-6 py-3 bg-white rounded-3xl">🌯 Dürüm</button>
+            <button onclick="filterByCategory('Hamburger')" class="category-btn px-6 py-3 bg-white rounded-3xl">🍔 Hamburger</button>
+            <button onclick="filterByCategory('Pizza')" class="category-btn px-6 py-3 bg-white rounded-3xl">🍕 Pizza</button>
+            <button onclick="filterByCategory('Kebap')" class="category-btn px-6 py-3 bg-white rounded-3xl">🥙 Kebap</button>
+            <button onclick="filterByCategory('Tatlılar')" class="category-btn px-6 py-3 bg-white rounded-3xl">🍰 Tatlı</button>
+            <button onclick="filterByCategory('İçecek')" class="category-btn px-6 py-3 bg-white rounded-3xl">🥤 İçecek</button>
+        </div>
+
+        <div id="customer-products-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+        <button onclick="showMyOrders()" class="fixed bottom-8 right-8 bg-red-600 text-white w-14 h-14 rounded-3xl flex items-center justify-center shadow-2xl text-3xl">
+            📋
+        </button>
+    </div>
+
+    <!-- RESTORAN DASHBOARD -->
+    <div id="restaurant-dashboard" class="page hidden relative">
+        <button onclick="restaurantLogout()" class="absolute top-6 left-6 text-gray-500 hover:text-red-600 flex items-center gap-2">
+            <i class="fa-solid fa-arrow-left"></i> Geri
+        </button>
+        <div class="flex justify-between items-center mb-8 pt-10">
+            <h2 id="restaurant-welcome" class="text-4xl font-bold"></h2>
+            <button onclick="restaurantLogout()" class="flex items-center gap-2 text-red-600 font-medium">
+                <i class="fa-solid fa-right-from-bracket"></i> Çıkış
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <!-- Ürünler -->
+            <div class="lg:col-span-7 bg-white rounded-3xl p-8 shadow">
+                <div class="flex justify-between mb-6">
+                    <h3 class="text-2xl font-semibold">Ürünlerim</h3>
+                    <button onclick="showAddProductModal()" class="bg-red-600 text-white px-6 py-3 rounded-2xl flex items-center gap-2">
+                        <i class="fa-solid fa-plus"></i> Yeni Ürün
+                    </button>
+                </div>
+                <div id="restaurant-products-list" class="space-y-4"></div>
+            </div>
+
+            <!-- Siparişler -->
+            <div class="lg:col-span-5 bg-white rounded-3xl p-8 shadow">
+                <h3 class="text-2xl font-semibold mb-6">Siparişlerim</h3>
+                <div id="restaurant-orders-list" class="space-y-6 max-h-[600px] overflow-y-auto"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sepet Modal -->
+    <div id="cart-modal" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+        <div class="bg-white w-full max-w-lg rounded-3xl p-8 max-h-[90vh] overflow-y-auto relative">
+            <button onclick="hideCart()" class="absolute top-6 right-6 text-gray-500 hover:text-red-600">
+                <i class="fa-solid fa-xmark text-3xl"></i>
+            </button>
+            <h3 class="text-3xl font-bold mb-6">Sepetim</h3>
+            <div id="cart-items" class="space-y-6"></div>
+            <div class="mt-8 pt-6 border-t flex justify-between text-2xl font-semibold">
+                <span>Toplam:</span>
+                <span id="cart-total">0 ₺</span>
+            </div>
+            <button onclick="placeOrder()" class="mt-8 w-full bg-red-600 text-white py-6 rounded-3xl text-xl font-semibold">Siparişi Tamamla</button>
+        </div>
+    </div>
+
+    <!-- Ürün Ekle Modal -->
+    <div id="product-modal" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+        <div class="bg-white rounded-3xl p-8 w-full max-w-md relative">
+            <button onclick="hideProductModal()" class="absolute top-6 right-6 text-gray-500 hover:text-red-600">
+                <i class="fa-solid fa-xmark text-3xl"></i>
+            </button>
+            <h3 class="text-2xl font-bold mb-6">Yeni Ürün Ekle</h3>
+            <input id="new-product-name" placeholder="Ürün Adı" class="w-full p-4 border rounded-2xl mb-4">
+            <select id="new-product-category" class="w-full p-4 border rounded-2xl mb-4">
+                <option value="Dürüm">Dürüm</option>
+                <option value="Hamburger">Hamburger</option>
+                <option value="Pizza">Pizza</option>
+                <option value="Kebap">Kebap</option>
+                <option value="Tatlılar">Tatlılar</option>
+                <option value="İçecek">🥤 İçecek</option>
+            </select>
+            <input id="new-product-price" type="number" placeholder="Fiyat (₺)" class="w-full p-4 border rounded-2xl mb-4">
+            <textarea id="new-product-desc" placeholder="Açıklama" rows="3" class="w-full p-4 border rounded-2xl mb-6"></textarea>
+            <button onclick="addProduct()" class="w-full bg-red-600 text-white py-5 rounded-3xl">Ekle</button>
+        </div>
+    </div>
+
+    <!-- Müşteri Siparişlerim Modal -->
+    <div id="my-orders-modal" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+        <div class="bg-white rounded-3xl p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto relative">
+            <button onclick="hideMyOrdersModal()" class="absolute top-6 right-6 text-gray-500 hover:text-red-600">
+                <i class="fa-solid fa-xmark text-3xl"></i>
+            </button>
+            <h3 class="text-3xl font-bold mb-6">Siparişlerim</h3>
+            <div id="my-orders-list" class="space-y-6"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentUser = null;
+    let currentRole = null;
+    let currentCart = [];
+
+    let appData = { 
+        customers: [], 
+        restaurants: [], 
+        orders: [], 
+        nextCustomerId: 1, 
+        nextRestaurantId: 1, 
+        nextOrderId: 1001 
+    };
+
+    function loadData() {
+        const saved = localStorage.getItem('yemeksepetiData');
+        if (saved) {
+            appData = JSON.parse(saved);
+        } else {
+            appData.restaurants = [
+                { id: 1, name: "Lezzet Döner", ownerEmail: "lezzet@example.com", password: "123", products: [
+                    {id:101, name:"Et Dürüm", category:"Dürüm", price:85, desc:"Taze et dürüm"}
+                ]},
+                { id: 2, name: "Burger Palace", ownerEmail: "burger@example.com", password: "123", products: [
+                    {id:201, name:"Cheeseburger", category:"Hamburger", price:120, desc:"Klasik"}
+                ]}
+            ];
+            saveData();
+        }
+    }
+
+    function saveData() {
+        localStorage.setItem('yemeksepetiData', JSON.stringify(appData));
+    }
+
+    function showPage(pageId) {
+        document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+        document.getElementById(pageId).classList.remove('hidden');
+        updateNavbar();
+    }
+
+    function updateNavbar() {
+        document.getElementById('nav-right').innerHTML = currentRole ? 
+            `<button onclick="logout()" class="text-red-600 font-medium">Çıkış Yap</button>` : '';
+    }
+
+    function logout() {
+        currentUser = null; 
+        currentRole = null; 
+        currentCart = [];
+        showPage('page-home');
+    }
+
+    // ====================== MÜŞTERİ ======================
+    function customerRegister(e) {
+        e.preventDefault();
+        const username = document.getElementById('cust-reg-username').value.trim();
+        const email = document.getElementById('cust-reg-email').value.trim();
+
+        if (appData.customers.find(u => u.username === username || u.email === email)) {
+            alert('Bu kullanıcı adı veya e-posta zaten kayıtlı!');
+            return;
+        }
+
+        const newCustomer = {
+            id: appData.nextCustomerId++,
+            username,
+            email,
+            address: document.getElementById('cust-reg-address').value.trim(),
+            phone: document.getElementById('cust-reg-phone').value.trim(),
+            password: document.getElementById('cust-reg-password').value,
+            orders: []
+        };
+
+        appData.customers.push(newCustomer);
+        saveData();
+        alert('Kayıt başarılı! Şimdi giriş yapabilirsiniz.');
+        showPage('page-customer-login');
+    }
+
+    function customerLogin(e) {
+        e.preventDefault();
+        const input = document.getElementById('cust-login-input').value.trim();
+        const pass = document.getElementById('cust-login-password').value;
+
+        const user = appData.customers.find(u => (u.username === input || u.email === input) && u.password === pass);
+        if (user) {
+            currentUser = user;
+            currentRole = 'customer';
+            currentCart = [];
+            showCustomerDashboard();
+        } else alert('Bilgiler hatalı!');
+    }
+
+    function showCustomerDashboard() {
+        showPage('customer-dashboard');
+        document.getElementById('customer-welcome').innerHTML = `Merhaba, <span class="text-red-600">${currentUser.username}</span>`;
+        renderProducts();
+    }
+
+    function renderProducts(cat = 'all') {
+        const container = document.getElementById('customer-products-grid');
+        container.innerHTML = '';
+
+        appData.restaurants.forEach(rest => {
+            let prods = rest.products;
+            if (cat !== 'all') prods = prods.filter(p => p.category === cat);
+
+            prods.forEach(p => {
+                container.innerHTML += `
+                <div class="bg-white rounded-3xl p-6 shadow card-hover">
+                    <span class="text-xs bg-orange-100 px-4 py-1 rounded-full">${p.category}</span>
+                    <h4 class="font-bold text-xl mt-4">${p.name}</h4>
+                    <p class="text-sm text-gray-500">${p.desc || ''}</p>
+                    <div class="flex justify-between mt-6">
+                        <span class="text-3xl font-bold text-red-600">${p.price} ₺</span>
+                        <button onclick="addToCart(${rest.id},'${rest.name.replace(/'/g, "\\'")}',${p.id},'${p.name.replace(/'/g, "\\'")}',${p.price})" 
+                                class="bg-red-600 text-white w-12 h-12 rounded-2xl flex items-center justify-center text-xl hover:bg-red-700">
+                            🛒
+                        </button>
+                    </div>
+                </div>`;
+            });
+        });
+    }
+
+    function filterByCategory(cat) {
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.classList.toggle('active', 
+                (cat === 'all' && btn.textContent.includes('Tümü')) || 
+                btn.textContent.includes(cat)
+            );
+        });
+        renderProducts(cat);
+    }
+
+    function addToCart(restId, restName, prodId, prodName, price) {
+        const existing = currentCart.find(i => i.productId === prodId);
+        if (existing) existing.qty++;
+        else currentCart.push({restaurantId: restId, restaurantName: restName, productId: prodId, productName: prodName, price, qty: 1});
+        document.getElementById('cart-count').textContent = currentCart.reduce((a,b)=>a+b.qty,0);
+    }
+
+    function showCart() {
+        if (currentCart.length === 0) return alert('Sepet boş!');
+        document.getElementById('cart-modal').classList.remove('hidden');
+        renderCart();
+    }
+
+    function hideCart() {
+        document.getElementById('cart-modal').classList.add('hidden');
+    }
+
+    function renderCart() {
+        let html = '', total = 0;
+        currentCart.forEach((item) => {
+            const itemTotal = item.price * item.qty;
+            total += itemTotal;
+            html += `<div class="flex justify-between"><div>${item.qty}× ${item.productName}</div><div>${itemTotal} ₺</div></div>`;
+        });
+        document.getElementById('cart-items').innerHTML = html;
+        document.getElementById('cart-total').textContent = total + ' ₺';
+    }
+
+    function placeOrder() {
+        if (currentCart.length === 0) return;
+        const total = currentCart.reduce((sum, i) => sum + i.price * i.qty, 0);
+
+        const order = {
+            id: appData.nextOrderId++,
+            customerId: currentUser.id,
+            customerName: currentUser.username,
+            restaurantId: currentCart[0].restaurantId,
+            restaurantName: currentCart[0].restaurantName,
+            items: currentCart.map(i => ({name: i.productName, qty: i.qty})),
+            total: total,
+            status: "Sipariş Alındı",
+            date: new Date().toLocaleString('tr-TR')
+        };
+
+        appData.orders.push(order);
+        currentUser.orders = currentUser.orders || [];
+        currentUser.orders.push(order.id);
+        saveData();
+
+        alert(`✅ Siparişiniz alındı! Sipariş No: #${order.id}`);
+        hideCart();
+        currentCart = [];
+        document.getElementById('cart-count').textContent = '0';
+    }
+
+    function showMyOrders() {
+        const modal = document.getElementById('my-orders-modal');
+        const container = document.getElementById('my-orders-list');
+        container.innerHTML = '';
+
+        if (!currentUser.orders || currentUser.orders.length === 0) {
+            container.innerHTML = '<p class="text-gray-400 text-center py-12">Henüz siparişiniz yok.</p>';
+        } else {
+            currentUser.orders.forEach(orderId => {
+                const order = appData.orders.find(o => o.id === orderId);
+                if (order) {
+                    container.innerHTML += `
+                    <div class="border rounded-3xl p-6">
+                        <div class="flex justify-between">
+                            <span>#${order.id} - ${order.date}</span>
+                            <span class="font-semibold">${order.total} ₺</span>
+                        </div>
+                        <div class="mt-3">${order.items.map(i => `${i.qty}× ${i.name}`).join('<br>')}</div>
+                        <div class="mt-4 text-sm font-medium">${order.status} • ${order.restaurantName}</div>
+                    </div>`;
+                }
+            });
+        }
+        modal.classList.remove('hidden');
+    }
+
+    function hideMyOrdersModal() {
+        document.getElementById('my-orders-modal').classList.add('hidden');
+    }
+
+    // ====================== RESTORAN ======================
+    function restaurantRegister(e) {
+        e.preventDefault();
+        const name = document.getElementById('rest-reg-name').value.trim();
+        const email = document.getElementById('rest-reg-owner-email').value.trim();
+
+        if (appData.restaurants.find(r => r.name.toLowerCase() === name.toLowerCase() || r.ownerEmail.toLowerCase() === email.toLowerCase())) {
+            alert('Bu restoran adı veya e-posta zaten kayıtlı!');
+            return;
+        }
+
+        appData.restaurants.push({
+            id: appData.nextRestaurantId++,
+            name,
+            ownerName: document.getElementById('rest-reg-owner').value.trim(),
+            ownerEmail: email,
+            ownerPhone: document.getElementById('rest-reg-owner-phone').value.trim(),
+            password: document.getElementById('rest-reg-password').value,
+            products: []
+        });
+        saveData();
+        alert('Restoran başarıyla kaydedildi!');
+        showPage('page-restaurant-login');
+    }
+
+    function restaurantLogin(e) {
+        e.preventDefault();
+        const input = document.getElementById('rest-login-input').value.trim();
+        const pass = document.getElementById('rest-login-password').value;
+        const rest = appData.restaurants.find(r => (r.name === input || r.ownerEmail === input) && r.password === pass);
+        if (rest) {
+            currentUser = rest;
+            currentRole = 'restaurant';
+            showRestaurantDashboard();
+        } else alert('Bilgiler hatalı!');
+    }
+
+    function showRestaurantDashboard() {
+        showPage('restaurant-dashboard');
+        document.getElementById('restaurant-welcome').innerHTML = `${currentUser.name} <span class="text-red-600">Restoranı</span>`;
+        renderRestaurantProducts();
+        renderRestaurantOrders();
+    }
+
+    function renderRestaurantProducts() {
+        const container = document.getElementById('restaurant-products-list');
+        container.innerHTML = currentUser.products.map(p => `
+            <div class="flex justify-between border-b pb-4">
+                <div><span class="text-xs bg-orange-100 px-3 py-1 rounded-full">${p.category}</span><div class="font-semibold">${p.name}</div></div>
+                <div class="font-bold">${p.price} ₺</div>
+            </div>
+        `).join('') || '<p class="text-gray-400">Henüz ürün eklenmedi.</p>';
+    }
+
+    function showAddProductModal() { document.getElementById('product-modal').classList.remove('hidden'); }
+    function hideProductModal() { document.getElementById('product-modal').classList.add('hidden'); }
+
+    function addProduct() {
+        const name = document.getElementById('new-product-name').value.trim();
+        const category = document.getElementById('new-product-category').value;
+        const price = parseFloat(document.getElementById('new-product-price').value);
+        if (!name || !price) return alert('Lütfen isim ve fiyat girin');
+
+        currentUser.products.push({id: Date.now(), name, category, price, desc: document.getElementById('new-product-desc').value.trim()});
+        saveData();
+        hideProductModal();
+        renderRestaurantProducts();
+        alert('Ürün eklendi!');
+    }
+
+    function renderRestaurantOrders() {
+        const container = document.getElementById('restaurant-orders-list');
+        container.innerHTML = '';
+        const myOrders = appData.orders.filter(o => o.restaurantId === currentUser.id);
+
+        if (myOrders.length === 0) {
+            container.innerHTML = '<p class="text-center text-gray-400 py-12">Henüz sipariş gelmedi.</p>';
+            return;
+        }
+
+        myOrders.forEach(order => {
+            let btn = '';
+            if (order.status === "Sipariş Alındı") btn = `<button onclick="updateOrderStatus(${order.id}, 'Hazırlanıyor')" class="px-4 py-2 bg-amber-500 text-white rounded-2xl text-sm">Hazırlanıyor</button>`;
+            else if (order.status === "Hazırlanıyor") btn = `<button onclick="updateOrderStatus(${order.id}, 'Yolda')" class="px-4 py-2 bg-blue-500 text-white rounded-2xl text-sm">Yola Çıkar</button>`;
+            else if (order.status === "Yolda") btn = `<button onclick="updateOrderStatus(${order.id}, 'Teslim Edildi')" class="px-4 py-2 bg-green-600 text-white rounded-2xl text-sm">Teslim Edildi</button>`;
+
+            container.innerHTML += `
+            <div class="bg-gray-50 p-6 rounded-3xl">
+                <div class="flex justify-between">
+                    <span class="font-mono">#${order.id}</span>
+                    <span class="font-semibold">${order.total} ₺</span>
+                </div>
+                <div class="mt-2 text-sm">${order.customerName}</div>
+                <div class="my-4 text-sm">${order.items.map(i => `${i.qty}× ${i.name}`).join('<br>')}</div>
+                <div class="flex justify-between items-center">
+                    <span class="font-medium">${order.status}</span>
+                    <div>${btn}</div>
+                </div>
+            </div>`;
+        });
+    }
+
+    function updateOrderStatus(orderId, newStatus) {
+        const order = appData.orders.find(o => o.id === orderId);
+        if (order && order.restaurantId === currentUser.id) {
+            order.status = newStatus;
+            saveData();
+            renderRestaurantOrders();
+            alert(`Sipariş #${orderId} → ${newStatus}`);
+        }
+    }
+
+    function restaurantLogout() {
+        currentUser = null; 
+        currentRole = null;
+        showPage('page-home');
+    }
+
+    // ====================== BAŞLAT ======================
+    window.onload = () => {
+        loadData();
+        showPage('page-home');
+    };
+</script>
+</body>
+</html>
